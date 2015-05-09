@@ -1,4 +1,4 @@
-#include "BeBopSensors_Mesh.h"
+#include "eio_qte_Mesh.h"
 
 Mesh::Mesh() :
     _face(GL_FRONT_AND_BACK),
@@ -169,10 +169,6 @@ void Mesh::initColors()
 
     for(int i = 0; i < _verticies.size(); i++)
     {
-        float r = (float)qrand()/(float)RAND_MAX;
-        float g = (float)qrand()/(float)RAND_MAX;
-        float b = (float)qrand()/(float)RAND_MAX;
-        //_colors.append(QVector4D(r,g,b,1));
         _colors.append(QVector4D(0.0,0.0,0.0,1.0));
     }
 }
@@ -318,6 +314,8 @@ void Mesh::setHidden(bool hide)
 //----------------------------------------- Sphere -------------------------------------------//
 void Mesh::makeSphere(float radius, float numLongitude, float numLatitude)
 {
+    mesh->setPrimitive(GL_QUADS);
+
     _verticies.clear();
     _colors.clear();
 
@@ -561,6 +559,8 @@ void Mesh::makePlane(int rows, int columns)
 
 void Mesh::makePlane(int rows, int columns, float unitSize)
 {
+    setPrimitive(GL_QUADS);
+
     //---- Verticies
     _verticies.clear();
 
@@ -590,20 +590,19 @@ void Mesh::makePlane(int rows, int columns, float unitSize)
     initColors();
 
     //---- Normals
-    /*
     for(int i = 0; i < rows; i++)
     {
         for(int j = 0; j < columns; j++)
         {
             QMatrix4x4 mat;
-            mat.rotate(-90, 0, 1, 0);
+            mat.rotate(90, 0, 1, 0);
 
             QVector3D normal = mat * QVector3D( i, j, 0);
             normal.normalize();
             _normals.append(normal);
         }
     }
-    */
+
 }
 
 

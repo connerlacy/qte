@@ -31,6 +31,7 @@ void Canvas::initializeGL()
 
     setup();
     m_drawTimer->start(m_Interval);
+    m_ArcBall->translate(0,0,20);
 
     qDebug() << "initialize GL";
 }
@@ -53,7 +54,7 @@ void Canvas::paintGL()
     glEnable(GL_DEPTH_TEST);
     glShadeModel(GL_SMOOTH);
 
-    glEnable(GL_LIGHTING);
+    //glEnable(GL_LIGHTING);
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
 

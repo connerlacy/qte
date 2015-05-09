@@ -4,6 +4,7 @@
 //================================ Graphics
 #include "eio_qte_graphics/eio_qte_Canvas.h"
 #include "eio_qte_graphics/eio_qte_ArcBall.h"
+#include "eio_qte_graphics/eio_qte_Mesh.h"
 
 //================================ Libs
 //---- JUCE

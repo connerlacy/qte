@@ -7,7 +7,7 @@
 #include <QQuaternion>
 #include <QMatrix4x4>
 
-#include "BeBopSensors_ArcBall.h"
+#include "eio_qte_ArcBall.h"
 
 #include "gl.h"
 #include "glu.h"
