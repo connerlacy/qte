@@ -16,23 +16,38 @@ INCLUDEPATH += $$EIO_SDK_QT_PATH
 HEADERS += \
 SOURCES += \
 FORMS += \
+    $$PWD/eio_qte_graphics/eio_qte_Shader.h
 
 
 #===================================== Graphics =================================#
 SOURCES += \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ArcBall.cpp \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Canvas.cpp \
-    #$$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Light.cpp \
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Light.cpp \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Mesh.cpp \
     #$$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ModelLoader.cpp
+    $$PWD/eio_qte_graphics/eio_qte_Shader.cpp
 
 HEADERS  += \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ArcBall.h \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Canvas.h \
-    #$$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Light.h \
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Light.h \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Mesh.h \
     #$$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ModelLoader.h
 
+OTHER_FILES += \
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader_Desktop_Template.frag \
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader_Desktop_Template.vert
+
+
+#===================================== MIDI =================================#
+SOURCES += \
+    $$EIO_SDK_QT_PATH/eio_qte_midi/eio_qte_AudioMIDIIO.cpp \
+    $$EIO_SDK_QT_PATH/eio_qte_midi/eio_qte_MIDIParser.cpp
+
+HEADERS  += \
+    $$EIO_SDK_QT_PATH/eio_qte_midi/eio_qte_AudioMIDIIO.h \
+    $$EIO_SDK_QT_PATH/eio_qte_midi/eio_qte_MIDIParser.h
 
 #===================================== Libs =================================#
 #---- JUCE
@@ -131,5 +146,7 @@ DEPENDPATH += $$EIO_SDK_QT_PATH/eio_qte_libs/Assimp/include
 
 HEADERS +=  \
     $$EIO_SDK_QT_PATH/eio_qte_Include.h
+
+
 
 

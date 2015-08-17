@@ -3,12 +3,8 @@
 Canvas::Canvas(QWidget *parent) :
     QOpenGLWidget(parent)
 {
-    //Enable multisampling
-    QSurfaceFormat surfaceFormat;
-    surfaceFormat.setSamples(16);
-    this->setFormat(surfaceFormat);
+    qDebug() << "VERTSION" << this->format();
 
-    //setUpdatesEnabled(false);
 
     installEventFilter(this);
 
@@ -18,78 +14,50 @@ Canvas::Canvas(QWidget *parent) :
     m_Interval = 50;
     connect(m_drawTimer, SIGNAL(timeout()), this, SLOT(update()));
 
-    m_ClearColor = QVector4D(0.2,0.2,0.2,1);
+    m_ClearColor = QVector4D(1,0,1,1);
 }
 
 void Canvas::initializeGL()
 {
+    makeCurrent();
     initializeOpenGLFunctions();
 
-    makeCurrent();
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);
-
     setup();
-    m_drawTimer->start(m_Interval);
-    m_ArcBall->translate(0,0,20);
 
-    qDebug() << "initialize GL";
+    m_drawTimer->start(m_Interval);
+    m_ArcBall->translate(0,0,1);
 }
 
 void Canvas::resizeGL(int width, int height)
 {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(45.0f,(GLfloat)width/(GLfloat)height,0.01f, 2000.0f);
-
+    //Update arc ball mouse controll
     m_ArcBall->setSize(width, height);
+
+    // Calculate aspect ratio
+    qreal aspect = qreal(width) / qreal(height ? height : 1);
+
+    // Set near plane to 3.0, far plane to 7.0, field of view 45 degrees
+    const qreal zNear = 0.01, zFar = 2000, fov = 45.0;
+
+    // Reset projection
+    m_ProjectionMatrix.setToIdentity();
+
+    // Set perspective projection
+    m_ProjectionMatrix.perspective(fov, aspect, zNear, zFar);
 }
 
 void Canvas::paintGL()
 {
-    makeCurrent();
+    if(!TWOD)
+    {
+        glClearColor(m_ClearColor.x(),m_ClearColor.y(),m_ClearColor.z(),m_ClearColor.w());
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
-    glClearColor(m_ClearColor.x(),m_ClearColor.y(),m_ClearColor.z(),m_ClearColor.w());
-
-    glEnable(GL_DEPTH_TEST);
-    glShadeModel(GL_SMOOTH);
-
-    //glEnable(GL_LIGHTING);
-    glEnable(GL_COLOR_MATERIAL);
-    glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT);
-
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0,0,this->width(), this->height());
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glEnable(GL_LIGHT0);
-
-    glPushMatrix();
-    glTranslatef(0,0,-3);
-    glMultMatrixf(m_ArcBall->_matrix.data());
-
-    GLfloat global_ambient[] = { 1, 1, 1, 1 };
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, global_ambient);
-
-    GLfloat specular[] = {0.2f, 0.2f, 0.2f, 1};
-    glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-
-    GLfloat ambient[] = { 0.5f, 0.5f, 0.5f, 1 };
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-
-    GLfloat diffuse[] = { 0.5f, 0.5f, 0.5f };
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-
-    GLfloat position[] = { 0, 50, 50, 1.0f };
-    glLightfv(GL_LIGHT0, GL_POSITION, position);
-
-    glLightf (GL_LIGHT0, GL_SPOT_CUTOFF, 90.f);
-
-    glLightf(GL_LIGHT0, GL_SHININESS, 128);
+    //qDebug() << "draw";
 
     draw();
-    glPopMatrix();
 }
 
 
@@ -97,6 +65,7 @@ void Canvas::paintGL()
 void Canvas::mouseMoveEvent(QMouseEvent *me)
 {
     m_ArcBall->drag(me->x(), me->y());
+    //qDebug() << "mouse";
 }
 
 void Canvas::mousePressEvent(QMouseEvent *me)
@@ -121,7 +90,6 @@ bool Canvas::eventFilter(QObject *obj, QEvent *e)
         if(ke->key() == Qt::Key_Up)
         {
             m_ArcBall->_translateY+= 0.1;
-
         }
         else if(ke->key() == Qt::Key_Down)
         {
@@ -140,12 +108,12 @@ bool Canvas::eventFilter(QObject *obj, QEvent *e)
         }
         else if(ke->key() == Qt::Key_O)
         {
-            m_ArcBall->_translateZ+= 0.1;
+            m_ArcBall->_translateZ+= 0.5;
 
         }
         else if(ke->key() == Qt::Key_I)
         {
-            m_ArcBall->_translateZ-= 0.1;
+            m_ArcBall->_translateZ-= 0.5;
 
         }
         else
@@ -182,4 +150,3 @@ void Canvas::setClearColor(float r, float g, float b, float a)
 {
     m_ClearColor = QVector4D(r,g,b,a);
 }
-

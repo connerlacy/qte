@@ -3,224 +3,28 @@
 Mesh::Mesh() :
     _face(GL_FRONT_AND_BACK),
     _mode(GL_LINE),
-    _primitive(GL_POINTS)
+    _primitive(GL_FILL),
+    m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 {
-    _arcBall = NULL;
 
-    setMaterialAmbient(0.1, 0.1, 0.1, 1.0);
-    setMaterialDiffuse(1.0, 0.0, 0.0, 1.0);
-    setMaterialSpecular(0.5, 0.5, 0.5, 1.0);
-    setMaterialEmission(0.1, 0.1, 0.1, 1.0);
-    setMaterialShininess(50.0);
-
-    //setMaterialAmbient(0.19225, 0.19225, 0.19225,1);
-    //setMaterialDiffuse(0.50754,0.50754,0.50754,1);
-    //setMaterialSpecular(0.508273,	0.508273,	0.508273,1);
-    //setMaterialEmission(0.1, 0.1, 0.1, 1.0);
-    //setMaterialShininess(50);
-
-    _lightingEnabled = false;
-
-    _isHidden = false;
-}
-
-Mesh::Mesh(int size) :
-    _face(GL_FRONT_AND_BACK),
-    _mode(GL_LINE),
-    _primitive(GL_POINTS)
-{
-    _size = size;
-}
-
-Mesh::Mesh(QVector<QVector3D> verticies) :
-    _face(GL_FRONT_AND_BACK),
-    _mode(GL_LINE),
-    _primitive(GL_POINTS)
-{
-    setMaterialAmbient(0.1, 0.1, 0.1, 1.0);
-    setMaterialDiffuse(1.0, 0.0, 0.0, 1.0);
-    setMaterialSpecular(0.5, 0.5, 0.5, 1.0);
-    //setMaterialEmission(0.1, 0.1, 0.1, 1.0);
-    //setMaterialShininess(50.0);
-
-    setMaterialAmbient(0.19225, 0.19225, 0.19225,1);
-    setMaterialDiffuse(0.50754,0.50754,0.50754,1);
-    setMaterialSpecular(0.508273,	0.508273,	0.508273,1);
-    //setMaterialEmission(0.1, 0.1, 0.1, 1.0);
-    setMaterialShininess(100);
-
-    _isHidden = false;
-
-    _verticies.clear();
-
-    _verticies = verticies;
-
-    for(int i = 0; i < verticies.size(); i++)
-    {
-        //qDebug() << "mesh verticies" << verticies.at(i);
-    }
-
-    initIndicies();
-    initColors();
-
-    //qDebug() << "mesh indicies size" << _indicies.size() << _indicies;
-    //qDebug() << "mesh _verts size" << _verticies.size() << _verticies;
+    glClearColor(0, 0, 0, 1);
 }
 
 void Mesh::newVertex(float x, float y, float z)
 {
-    _verticies.append(QVector3D(x,y,z));
+    _vertices.append(QVector3D(x,y,z));
 
-    //Recalculate indicies linearly
-    initIndicies();
-
-    //Colors will also need to be updated
-    initColors();
-
-}
-
-void Mesh::newIndex(int vertNum)
-{
-
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////// GETTERS //////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-QVector<QVector3D> Mesh::getVerticies()
-{
-    return _verticies;
-}
-
-int Mesh::getVertexAtIndex(int index)
-{
-    if(index < _indicies.size())
-    {
-        return _indicies.at(index);
-    }
-
-    return -1;
-}
-
-QVector<QVector4D> Mesh::getColors()
-{
-    return _colors;
-}
-
-QVector<GLushort> Mesh::getIndicies()
-{
-    return _indicies;
-}
-
-QMatrix4x4 Mesh::getMultMatrix()
-{
-    return _transformationMatrix;
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////// SETTERS //////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//----------------------------------------- Vertex Position --------------------------------------------//
-void Mesh::setVertex(int vertNum, QVector3D vec)
-{
-    _verticies.replace(vertNum, vec);
-}
-
-void Mesh::setVertexX(int vertNum, float x)
-{
-    QVector3D vec = _verticies.at(vertNum);
-    vec.setX(x);
-    _verticies.replace(vertNum, vec);
-}
-
-void Mesh::setVertexY(int vertNum, float y)
-{
-    QVector3D vec = _verticies.at(vertNum);
-    vec.setY(y);
-    _verticies.replace(vertNum, vec);
-}
-
-void Mesh::setVertexZ(int vertNum, float z)
-{
-    QVector3D vec = _verticies.at(vertNum);
-    vec.setZ(z);
-    _verticies.replace(vertNum, vec);
-}
-
-//----------------------------------------- Vertex Color --------------------------------------------//
-void Mesh::setVertexRGBA(int vertNum, float r, float g, float b, float a)
-{
-    QVector4D vec = QVector4D(r, g, b, a);
-    _colors.replace(vertNum, vec);
-    //_colors.at(vertNum).setX(r);
-}
-
-void Mesh::setVertexColor(int vertNum, QColor color)
-{
-    QVector4D vec = QVector4D(color.redF(), color.greenF(), color.blueF(), color.alphaF());
-    _colors.replace(vertNum, vec);
-}
-
-void Mesh::initColors()
-{
-    //----------------- Construct color data
-    _colors.clear();
-
-    for(int i = 0; i < _verticies.size(); i++)
-    {
-        _colors.append(QVector4D(0.0,0.0,0.0,1.0));
-    }
-}
-
-void Mesh::setAllVerticiesToColor(QColor color)
-{
-    _colors.clear();
-
-    for(int i = 0; i < _verticies.size(); i++)
-    {
-        _colors.append(QVector4D((float)color.red()/255.0f, (float)color.green()/255.0f, (float)color.blue()/255.0f, (float)color.alpha()/255.0f));
-        //_colors.append(QVector4D(1.0,0.0,0.0,1.0));
-    }
-}
-
-
-//-------------------------------------------- Indexing ----------------------------------------------//
-void Mesh::setIndicies(QVector<int> indicies)
-{
-    _indicies.clear();
-
-    for(int i = 0; i < indicies.size(); i++)
-    {
-        _indicies.append(indicies.at(i));
-    }
+    //initIndicies();
 }
 
 void Mesh::initIndicies()
 {
-    _indicies.clear();
+    _indices.clear();
 
-    for(int i = 0; i < _verticies.size(); i++)
+    for(int i = 0; i < _vertices.size(); i++)
     {
-        _indicies.append(i);
+        _indices.append(i);
     }
-}
-
-
-//---------------------------------------- Transformations -------------------------------------------//
-void Mesh::setTranslation(QVector3D translation)
-{
-    //qDebug() << "Set translation in mesh" << translation;
-    _translation = translation;
-}
-
-void Mesh::setRotation(float angle, float x, float y, float z)
-{
-    _rotation = QVector4D(x, y, z, angle);
-
-    //_rotation.setX(x);
-    //_rotation.setY(y);
-    //_rotation.setZ(z);
 }
 
 void Mesh::setMultMatrix(QMatrix4x4 mtrx)
@@ -228,8 +32,6 @@ void Mesh::setMultMatrix(QMatrix4x4 mtrx)
     _transformationMatrix = mtrx;
 }
 
-
-//----------------------------------------- OpenGL Settings -------------------------------------------//
 void Mesh::setPolygonMode(GLenum face, GLenum mode)
 {
     _face = face;
@@ -242,71 +44,6 @@ void Mesh::setPrimitive(GLenum primitive)
 }
 
 
-//---------------------------------------------- Material ---------------------------------------------//
-void Mesh::setMaterialAmbient(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
-{
-    _materialAmbient[0] = r;
-    _materialAmbient[1] = g;
-    _materialAmbient[2] = b;
-    _materialAmbient[3] = a;
-}
-
-void Mesh::setMaterialDiffuse(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
-{
-    _materialDiffuse[0] = r;
-    _materialDiffuse[1] = g;
-    _materialDiffuse[2] = b;
-    _materialDiffuse[3] = a;
-}
-
-void Mesh::setMaterialSpecular(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
-{
-    _materialSpecular[0] = r;
-    _materialSpecular[1] = g;
-    _materialSpecular[2] = b;
-    _materialSpecular[3] = a;
-}
-
-void Mesh::setMaterialEmission(GLfloat r, GLfloat g, GLfloat b, GLfloat a)
-{
-    _materialEmission[0] = r;
-    _materialEmission[1] = g;
-    _materialEmission[2] = b;
-    _materialEmission[3] = a;
-}
-
-void Mesh::setMaterialShininess(GLfloat level)
-{
-    _materialShininess[0] = level;
-}
-
-
-//----------------------------------------- Lighting --------------------------------------------//
-void Mesh::setLightingEnabled(bool enabledDisabled)
-{
-    _lightingEnabled = enabledDisabled;
-}
-
-
-//------------------------------------------ ArcBall --------------------------------------------//
-void Mesh::setArcBall(ArcBall *ab)
-{
-    _arcBall = ab;
-}
-
-void Mesh::setArcBallEnable(bool enableDisable)
-{
-    _arcBallEnable = enableDisable;
-}
-
-
-//------------------------------------------ General --------------------------------------------//
-void Mesh::setHidden(bool hide)
-{
-    _isHidden = hide;
-}
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////// UTILITIES /  HELPERS ///////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -314,9 +51,9 @@ void Mesh::setHidden(bool hide)
 //----------------------------------------- Sphere -------------------------------------------//
 void Mesh::makeSphere(float radius, float numLongitude, float numLatitude)
 {
-    mesh->setPrimitive(GL_QUADS);
+    setPrimitive(GL_QUADS);
 
-    _verticies.clear();
+    _vertices.clear();
     _colors.clear();
 
     float latitude = 1.0 / (numLatitude-1);
@@ -344,23 +81,25 @@ void Mesh::makeSphere(float radius, float numLongitude, float numLatitude)
     }
 
     //---- Index
-    _indicies.clear();
+    _indices.clear();
 
     for(int lat = 0; lat < numLatitude - 1; lat++)
     {
         for(int lon = 0; lon < numLongitude - 1; lon++)
         {
-            _indicies.append( lat * numLongitude + lon);
-            _indicies.append(lat * numLongitude + (lon+1));
-            _indicies.append((lat+1) * numLongitude + (lon+1));
-            _indicies.append((lat+1) * numLongitude + lon);
+            _indices.append( lat * numLongitude + lon);
+            _indices.append(lat * numLongitude + (lon+1));
+            _indices.append((lat+1) * numLongitude + (lon+1));
+            _indices.append((lat+1) * numLongitude + lon);
         }
     }
 }
 
+
+//----------------------------------------- Circle -------------------------------------------//
 void Mesh::makeCircle(float radius, float numSlices)
 {
-    _verticies.clear();
+    _vertices.clear();
     _colors.clear();
 
 
@@ -375,34 +114,150 @@ void Mesh::makeCircle(float radius, float numSlices)
 
     //initColors();
 
-    //qDebug() << "circle" << _verticies;
+    //qDebug() << "circle" << _vertices;
 }
 
-void Mesh::makeArc(float radius, float degreeStart, float degreeStop, float numSlices)
+void Mesh::makeCircle(float radius, float borderWidth, float numSlices)
 {
-    _verticies.clear();
+    //Arrange in groups of
+    _vertices.clear();
     _colors.clear();
+
+
+    float degreeRange = 360;
+
+    //Inner Arc
+    for(int i = 0; i <= numSlices*2; i++)
+    {
+        double angle = degreeRange * ( (float)i / (numSlices*2.0f) );
+
+        angle *= 0.0174532925;
+
+        //Inner
+        double xInner = cos(angle)*radius;
+        double yInner = sin(angle)*radius;
+        newVertex(xInner,yInner,0);
+        _normals.append(QVector3D(xInner,yInner,0));
+
+        //Outer
+        double xOuter = cos(angle)*(radius + borderWidth);
+        double yOuter = sin(angle)*(radius + borderWidth);
+        newVertex(xOuter,yOuter,0);
+        _normals.append(QVector3D(xOuter,yOuter,0));
+
+    }
+
+    _indices.clear();
+
+    //Index
+    for(int i = 0; i < _vertices.size() - 2; i += 2)
+    {
+        //Triangle 1
+        _indices.append(i);
+        _indices.append(i + 1);
+        _indices.append(i + 3);
+
+        //Triangle 2
+        _indices.append(i);
+        _indices.append(i + 2);
+        _indices.append(i + 3);
+    }
+
+}
+
+
+//----------------------------------------- Arc -------------------------------------------//
+void Mesh::makeArc(float radius, float width, float degreeStart, float degreeStop, float numSlices)
+{
+    //Arrange in groups of
+    _vertices.clear();
+    _colors.clear();
+
 
     float degreeRange = degreeStop - degreeStart;
 
-    for(int i =0; i <= numSlices*2.0f; i++)
+
+    //Inner Arc
+    for(int i = 0; i <= numSlices*2; i++)
     {
         double angle = degreeRange * ( (float)i / (numSlices*2.0f) ) + degreeStart;
 
         angle *= 0.0174532925;
 
-        double x = cos(angle)*radius;
-        double y = sin(angle)*radius;
+        //Inner
+        double xInner = cos(angle)*radius;
+        double yInner = sin(angle)*radius;
+        newVertex(xInner,yInner,0);
+        _normals.append(QVector3D(xInner,yInner,0));
+
+        //Outer
+        double xOuter = cos(angle)*(radius + width);
+        double yOuter = sin(angle)*(radius + width);
+        newVertex(xOuter,yOuter,0);
+        _normals.append(QVector3D(xOuter,yOuter,0));
+
+    }
+
+    _indices.clear();
+
+    //Index
+    for(int i = 0; i < _vertices.size() - 2; i += 2)
+    {
+        //Triangle 1
+        _indices.append(i);
+        _indices.append(i + 1);
+        _indices.append(i + 3);
+
+        //Triangle 2
+        _indices.append(i);
+        _indices.append(i + 2);
+        _indices.append(i + 3);
+    }
+
+    /*
+    //Outer Arc
+    for(int i = 0; i < numSlices*2.0f; i++)
+    {
+        double angle = degreeRange * ( (float)i / (numSlices*2.0f) ) + degreeStart;
+
+        angle *= 0.0174532925;
+
+        double x = cos(angle)*(radius + width);
+        double y = sin(angle)*(radius + width);
         newVertex(x,y,0);
         _normals.append(QVector3D(x,y,0));
     }
+
+    qDebug() << "arc vertices" << _verticies.size();
+
+    _indicies.clear();
+
+    for(int i = _verticies.size() - 1; i >= numSlices*2.0f ; i--)
+    {
+        _indicies.append( i );
+    }
+
+    for(int i = 0; i < numSlices*2.0f; i++)
+    {
+        _indicies.append( i );
+    }
+
+
+    for(int i = _verticies.size()/2; i < numSlices*2.0f; i++)
+    {
+        //_indicies.append(i);
+    }
+
+    //_indicies.append(_verticies.size() - 1);
+    */
+
 }
 
 
 //--------------------------------------- Cylinder -----------------------------------------//
 void Mesh::makeCylinder(float radius, float height, float numLongitude, float numLatitude)
 {
-    _verticies.clear();
+    _vertices.clear();
     _colors.clear();
 
     float latitude = 1.0 / (numLatitude);
@@ -433,24 +288,24 @@ void Mesh::makeCylinder(float radius, float height, float numLongitude, float nu
     }
 
     //---- Index
-    _indicies.clear();
+    _indices.clear();
 
     for(int lat = 0; lat < numLatitude; lat++)
     {
         for(int lon = 0; lon < numLongitude; lon++)
         {
-            _indicies.append( lat * numLongitude + lon);
-            _indicies.append(lat * numLongitude + (lon+1));
-            _indicies.append((lat+1) * numLongitude + (lon+1));
-            _indicies.append((lat+1) * numLongitude + lon);
+            _indices.append( lat * numLongitude + lon);
+            _indices.append(lat * numLongitude + (lon+1));
+            _indices.append((lat+1) * numLongitude + (lon+1));
+            _indices.append((lat+1) * numLongitude + lon);
         }
     }
 }
 
 void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numLongitude, float numLatitude)
 {
-    //---- Create the verticies
-    _verticies.clear();
+    //---- Create the vertices
+    _vertices.clear();
     _normals.clear();
 
     QVector3D diff = start - end;
@@ -471,8 +326,8 @@ void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numL
         for(int s = 0; s < numLongitude; s++)
         {
             QVector3D currentVec = mat * QVector3D( radius*cos( 2*M_PI*s/(numLongitude - 1) ), h*height, radius*sin( 2*M_PI*s/(numLongitude - 1))) ;
-            //verticies.append(QVector3D(_radius*cos( 2*M_PI*s/(_numPointsPerSlice - 1) ), h, _radius*sin( 2*M_PI*s/(_numPointsPerSlice - 1) )));
-            _verticies.append(currentVec);
+            //vertices.append(QVector3D(_radius*cos( 2*M_PI*s/(_numPointsPerSlice - 1) ), h, _radius*sin( 2*M_PI*s/(_numPointsPerSlice - 1) )));
+            _vertices.append(currentVec);
 
             QVector3D normal = QVector3D(1.0*cos( 2*M_PI*s/(numLongitude - 1)), 0, 1.0*sin( 2*M_PI*s/(numLongitude - 1)));
             //normal.normalize();
@@ -480,8 +335,8 @@ void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numL
         }
     }
 
-    //---- Index the verticies so we can draw a mesh
-    _indicies.clear();
+    //---- Index the vertices so we can draw a mesh
+    _indices.clear();
 
     for(int i = 0; i < numLatitude - 1; i++)
     {
@@ -490,8 +345,8 @@ void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numL
         {
             for(int j = 0; j < numLongitude; j++)
             {
-                _indicies.append(j+i*numLongitude);
-                _indicies.append(j+i*numLongitude + numLongitude);
+                _indices.append(j+i*numLongitude);
+                _indices.append(j+i*numLongitude + numLongitude);
 
                 //qDebug() << j+i*_height<< j+i*_height + _height;
             }
@@ -502,8 +357,8 @@ void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numL
         {
             for(int j = numLongitude - 1; j >= 0; j--)
             {
-                _indicies.append(j+i*numLongitude);
-                _indicies.append(j+i*numLongitude + numLongitude);
+                _indices.append(j+i*numLongitude);
+                _indices.append(j+i*numLongitude + numLongitude);
                 //qDebug() << j+i*_height<< j+i*_height + _height;
             }
         }
@@ -514,8 +369,9 @@ void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numL
 //--------------------------------------- Plane -----------------------------------------//
 void Mesh::makePlane(int rows, int columns)
 {
+
     //---- Verticies
-    _verticies.clear();
+    _vertices.clear();
 
     for(int i = 0; i < rows; i++)
     {
@@ -525,29 +381,168 @@ void Mesh::makePlane(int rows, int columns)
         }
     }
 
-    //---- Indicies (GL_QUADS)
-    setPrimitive(GL_QUADS);
-    _indicies.clear();
+    _vertices.clear();
 
-    for(int i = 0; i < rows - 1; i++)
+    for(int x = 0; x < rows - 1; x++)
     {
-        for(int j = 0; j < columns - 1; j++)
+        //Even Row
+        if ( (x & 1) == 0 )
         {
-            _indicies.append(j+i*columns);
-            _indicies.append(j+i*columns + columns);
-            _indicies.append(j+i*columns + columns + 1);
-            _indicies.append(j+i*columns + 1);
+            for(int y = 0; y < columns - 1; y++)
+            {
+                if((y & 1) == 0)
+                {
+                    //Triangle 1
+                    newVertex(x, y, 0);
+                    newVertex(x, y + 1, 0);
+                    newVertex(x + 1, y, 0);
+
+                    //Triangle 2
+                    newVertex((x + 1), y,0);
+                    newVertex((x + 1), y + 1,0);
+                    newVertex(x, y + 1,0);
+                }
+                else
+                {
+                    //Triangle 1
+                    newVertex(x, y, 0);
+                    newVertex((x + 1), y, 0);
+                    newVertex((x + 1), y + 1, 0);
+
+                    //Triangle 2
+                    newVertex(x, y, 0);
+                    newVertex((x + 1), y + 1, 0);
+                    newVertex(x, y + 1, 0);
+                }
+            }
+        }
+
+        //Odd Rows
+        else
+        {
+            for(int y = 0; y < columns - 1; y++)
+            {
+                if((y & 1) == 1)
+                {
+                    //Triangle 1
+                    newVertex(x, y, 0);
+                    newVertex(x, y + 1, 0);
+                    newVertex((x + 1), y, 0);
+
+                    //Triangle 2
+                    newVertex((x + 1), y, 0);
+                    newVertex((x + 1), y + 1, 0);
+                    newVertex(x, y + 1, 0);
+                }
+                else
+                {
+                    //Triangle 1
+                    newVertex(x, y, 0);
+                    newVertex((x + 1), y, 0);
+                    newVertex((x + 1), y + 1, 0);
+
+                    //Triangle 2
+                    newVertex(x, y, 0);
+                    newVertex((x + 1), y + 1, 0);
+                    newVertex(x, y + 1, 0);
+
+                }
+            }
         }
     }
 
-    //---- Normals
+    _indices.clear();
+
+    for(int i = 0; i < _vertices.size(); i++)
+    {
+        _indices.append(i);
+    }
+
     /*
+    _indices.clear();
+
+    for(int x = 0; x < rows - 1; x++)
+    {
+        //Even Row
+        if ( (x & 1) == 0 )
+        {
+            for(int y = 0; y < columns - 1; y++)
+            {
+                if((y & 1) == 0)
+                {
+                    //Triangle 1
+                    _indices.append(x * columns + y);
+                    _indices.append(x * columns + y + 1);
+                    _indices.append((x + 1) * columns + y);
+
+                    //Triangle 2
+                    _indices.append((x + 1) * columns + y);
+                    _indices.append((x + 1) * columns + y + 1);
+                    _indices.append(x * columns + y + 1);
+                }
+                else
+                {
+                    //Triangle 1
+                    _indices.append(x * columns + y);
+                    _indices.append((x + 1) * columns + y);
+                    _indices.append((x + 1) * columns + y + 1);
+
+                    //Triangle 2
+                    _indices.append(x * columns + y);
+                    _indices.append((x + 1) * columns + y + 1);
+                    _indices.append(x * columns + y + 1);
+
+                }
+            }
+        }
+
+        //Odd Rows
+        else
+        {
+            for(int y = 0; y < columns - 1; y++)
+            {
+                if((y & 1) == 1)
+                {
+                    //Triangle 1
+                    _indices.append(x * columns + y);
+                    _indices.append(x * columns + y + 1);
+                    _indices.append((x + 1) * columns + y);
+
+                    //Triangle 2
+                    _indices.append((x + 1) * columns + y);
+                    _indices.append((x + 1) * columns + y + 1);
+                    _indices.append(x * columns + y + 1);
+                }
+                else
+                {
+                    //Triangle 1
+                    _indices.append(x * columns + y);
+                    _indices.append((x + 1) * columns + y);
+                    _indices.append((x + 1) * columns + y + 1);
+
+                    //Triangle 2
+                    _indices.append(x * columns + y);
+                    _indices.append((x + 1) * columns + y + 1);
+                    _indices.append(x * columns + y + 1);
+
+                }
+            }
+        }
+    }
+    */
+
+    //m_IndexBuffer.bind();
+    //m_IndexBuffer.allocate(_indices.constData(), _indices.size() * sizeof(GLushort));
+
+    /*
+    //---- Normals
+
     for(int i = 0; i < rows; i++)
     {
         for(int j = 0; j < columns; j++)
         {
             QMatrix4x4 mat;
-            mat.rotate(-90, 0, 1, 0);
+            mat.rotate(90, 0, 1, 0);
 
             QVector3D normal = mat * QVector3D( i, j, 0);
             normal.normalize();
@@ -555,6 +550,9 @@ void Mesh::makePlane(int rows, int columns)
         }
     }
     */
+
+    //initCubeGeometry();
+
 }
 
 void Mesh::makePlane(int rows, int columns, float unitSize)
@@ -562,32 +560,30 @@ void Mesh::makePlane(int rows, int columns, float unitSize)
     setPrimitive(GL_QUADS);
 
     //---- Verticies
-    _verticies.clear();
+    _vertices.clear();
 
     for(int i = 0; i < rows; i++)
     {
         for(int j = 0; j < columns; j++)
         {
-            _verticies.append(QVector3D(i*unitSize,j*unitSize,0));
+            _vertices.append(QVector3D(i*unitSize,j*unitSize,0));
             //newVertex( i*unitSize, j*unitSize, 0);
         }
     }
 
     //---- Indicies (GL_QUADS)
-    _indicies.clear();
+    _indices.clear();
 
     for(int i = 0; i < rows - 1; i++)
     {
         for(int j = 0; j < columns - 1; j++)
         {
-            _indicies.append(j+i*columns);
-            _indicies.append(j+i*columns + columns);
-            _indicies.append(j+i*columns + columns + 1);
-            _indicies.append(j+i*columns + 1);
+            _indices.append(j+i*columns);
+            _indices.append(j+i*columns + columns);
+            _indices.append(j+i*columns + columns + 1);
+            _indices.append(j+i*columns + 1);
         }
     }
-
-    initColors();
 
     //---- Normals
     for(int i = 0; i < rows; i++)
@@ -613,7 +609,7 @@ void Mesh::makeCone(float radius, float height, float numSlices)
     //Use triangles primitive
     setPrimitive(GL_TRIANGLES);
 
-    _verticies.clear();
+    _vertices.clear();
     _colors.clear();
 
     //Base
@@ -642,25 +638,23 @@ void Mesh::makeCone(float radius, float height, float numSlices)
 
 
     //---- Index
-    _indicies.clear();
+    _indices.clear();
 
     for(int i = 0; i < numSlices*2; i++)
     {
         if(i == numSlices*2 - 1)
         {
             //Connect first and last
-            _indicies.append(i);
-            _indicies.append(0);
-            _indicies.append(_verticies.size() - 1);
+            _indices.append(i);
+            _indices.append(0);
+            _indices.append(_vertices.size() - 1);
         }
         else
         {
-            _indicies.append(i);
-            _indicies.append(i + 1);
-            _indicies.append(_verticies.size() - 1);
+            _indices.append(i);
+            _indices.append(i + 1);
+            _indices.append(_vertices.size() - 1);
         }
-
-
     }
 }
 
@@ -668,132 +662,49 @@ void Mesh::makeCone(float radius, float height, float numSlices)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////// DRAWING //////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void Mesh::createBuffers()
+{
+    //---- Position
+    m_PositionBuffer.create();
+    m_PositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_PositionBuffer.bind();
+    m_PositionBuffer.allocate(_vertices.constData(), _vertices.size() * sizeof(QVector3D));
+
+    //---- Normals
+    m_NormalBuffer.create();
+    m_NormalBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_NormalBuffer.bind();
+    m_NormalBuffer.allocate(_normals.constData(), _normals.size() * sizeof(QVector3D));
+
+    //---- Indices
+    m_IndexBuffer.create();
+    m_IndexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_IndexBuffer.bind();
+    m_IndexBuffer.allocate(_indices.constData(), _indices.size() * sizeof(GLushort));
+
+    for(float i = 0 ; i < _vertices.size()/3; i++)
+    {
+        QVector4D col = QVector4D(float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX), 1);
+        _colors.append(col);
+        _colors.append(col);
+        _colors.append(col);
+        //qDebug() << "i/float(_vertices.size())" << RAND_MAX;
+    }
+
+
+    //---- Color
+    m_ColorBuffer.create();
+    m_ColorBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_ColorBuffer.bind();
+    m_ColorBuffer.allocate( _colors.constData(), _colors.size() * sizeof(QVector4D) );
+}
+
 void Mesh::drawMesh()
 {
-    if(!_isHidden)
-    {
-        glPolygonMode(_face, _mode);
-
-        //Push Matrix
-        glPushMatrix();
-
-        glMultMatrixf(_transformationMatrix.data());
-
-        //Enable vertex array drawing
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
-
-        //Send our arrays to open gl
-        glVertexPointer(3, GL_FLOAT, 0, _verticies.constData());
-        glNormalPointer(GL_FLOAT, 0, _normals.constData());
-        glColorPointer(4, GL_FLOAT, 0, _colors.constData());
-
-        //Draw our verticies and colors
-        glDrawElements(_primitive, _indicies.size(), GL_UNSIGNED_SHORT, _indicies.constData());
-
-        //Disable Vertex array drawing
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_NORMAL_ARRAY);
-
-        //Pop
-        glPopMatrix();
-    }
+    glPolygonMode(_face, _mode);
+    glDrawElements(_primitive, _indices.size(), GL_UNSIGNED_SHORT, 0);
 }
-
-void Mesh::drawFaces()
-{
-    _mode = GL_FILL;
-    _primitive = GL_TRIANGLES;
-
-    if(!_isHidden)
-    {
-        //Push Matrix
-        glPushMatrix();
-
-        glPolygonMode(_face, _mode);
-
-        glPolygonOffset(3, 3);
-        glEnable(GL_POLYGON_OFFSET_FILL);
-
-        glMultMatrixf(_transformationMatrix.data());
-
-        //Enable vertex array drawing
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
-
-        //Send our arrays to open gl
-        glVertexPointer(3, GL_FLOAT, 0, _verticies.constData());
-        glNormalPointer(GL_FLOAT, 0, _normals.constData());
-        glColorPointer(4, GL_FLOAT, 0, _colors.constData());
-
-        //Draw our verticies and colors
-        glDrawElements(_primitive, _indicies.size(), GL_UNSIGNED_SHORT, _indicies.constData());
-
-        glDisable(GL_POLYGON_OFFSET_FILL);
-
-        //Disable Vertex array drawing
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_NORMAL_ARRAY);
-
-        //Pop
-        glPopMatrix();
-    }
-}
-
-void Mesh::drawWireframe()
-{
-    _mode = GL_LINE;
-    _primitive = GL_TRIANGLES;
-
-    if(!_isHidden)
-    {
-        glPolygonMode(_face, _mode);
-
-        //Push Matrix
-        glPushMatrix();
-
-        glMultMatrixf(_transformationMatrix.data());
-
-        //Enable vertex array drawing
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glEnableClientState(GL_COLOR_ARRAY);
-        glEnableClientState(GL_NORMAL_ARRAY);
-
-        //Send our arrays to open gl
-        glVertexPointer(3, GL_FLOAT, 0, _verticies.constData());
-        glNormalPointer(GL_FLOAT, 0, _normals.constData());
-        glColorPointer(4, GL_FLOAT, 0, _colors.constData());
-
-        //Draw our verticies and colors
-        glDrawElements(_primitive, _indicies.size(), GL_UNSIGNED_SHORT, _indicies.constData());
-
-        //Disable Vertex array drawing
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glDisableClientState(GL_NORMAL_ARRAY);
-
-        //Pop
-        glPopMatrix();
-    }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////// COLOR ///////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Mesh::setColor(float r, float g, float b)
-{
-    _colors.clear();
-
-    for(int i = 0; i < _verticies.size(); i++)
-    {
-        _colors.append(QVector4D(r,g,b,1.0));
-    }
-}
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////// UTILS ///////////////////////////////////////////////////
@@ -802,45 +713,45 @@ QVector3D Mesh::getMeshCenter()
 {
     QVector3D min, max;
 
-    min = max = _verticies.at(0);
+    min = max = _vertices.at(0);
 
-    for(int i = 0; i < _verticies.size(); i++)
+    for(int i = 0; i < _vertices.size(); i++)
     {
         //---- Min
         //x
-        if(min.x() > _verticies.at(i).x())
+        if(min.x() > _vertices.at(i).x())
         {
-            min.setX(_verticies.at(i).x());
+            min.setX(_vertices.at(i).x());
         }
 
         //y
-        if(min.y() > _verticies.at(i).y())
+        if(min.y() > _vertices.at(i).y())
         {
-            min.setY(_verticies.at(i).y());
+            min.setY(_vertices.at(i).y());
         }
 
         //z
-        if(min.z() > _verticies.at(i).z())
+        if(min.z() > _vertices.at(i).z())
         {
-            min.setZ(_verticies.at(i).z());
+            min.setZ(_vertices.at(i).z());
         }
 
         //---- Max
         //x
-        if(max.x() < _verticies.at(i).x())
+        if(max.x() < _vertices.at(i).x())
         {
-            max.setX(_verticies.at(i).x());
+            max.setX(_vertices.at(i).x());
         }
         //y
-        if(max.y() < _verticies.at(i).y())
+        if(max.y() < _vertices.at(i).y())
         {
-            max.setY(_verticies.at(i).y());
+            max.setY(_vertices.at(i).y());
         }
 
         //z
-        if(max.z() < _verticies.at(i).z())
+        if(max.z() < _vertices.at(i).z())
         {
-            max.setZ(_verticies.at(i).z());
+            max.setZ(_vertices.at(i).z());
         }
     }
 
@@ -851,7 +762,7 @@ QVector3D Mesh::getMeshCenter()
 
 void Mesh::clear()
 {
-    _verticies.clear();
+    _vertices.clear();
     _normals.clear();
     _colors.clear();
 }
