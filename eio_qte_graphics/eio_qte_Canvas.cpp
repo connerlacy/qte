@@ -3,9 +3,6 @@
 Canvas::Canvas(QWidget *parent) :
     QOpenGLWidget(parent)
 {
-    qDebug() << "VERTSION" << this->format();
-
-
     installEventFilter(this);
 
     m_ArcBall = new ArcBall(this);
