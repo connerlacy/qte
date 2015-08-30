@@ -1,12 +1,12 @@
-#include "BeBopSensors_ModelLoader.h"
+#include "eio_qte_ModelLoader.h"
 
-BeBopSensors_ModelLoader::BeBopSensors_ModelLoader(QObject *parent) :
+ModelLoader::ModelLoader(QObject *parent) :
     QObject(parent)
 {
     scene = NULL;
 }
 
-bool BeBopSensors_ModelLoader::importAsset(QString pathToFile)
+bool ModelLoader::importAsset(QString pathToFile)
 {
     qDebug() << "IMPORT ASSET: " << pathToFile;
 
@@ -47,8 +47,6 @@ bool BeBopSensors_ModelLoader::importAsset(QString pathToFile)
                 QVector<float> weights;
 
                 aiBone *currentBone = currentMesh->mBones[b];
-
-
 
                 for(int v = 0; v < currentBone->mNumWeights; v++)
                 {
@@ -104,17 +102,17 @@ bool BeBopSensors_ModelLoader::importAsset(QString pathToFile)
     return true;
 }
 
-aiMesh* BeBopSensors_ModelLoader::getAiMesh(int index)
+aiMesh* ModelLoader::getAiMesh(int index)
 {
     return aiMeshes[index];
 }
 
-vector<aiMesh *> BeBopSensors_ModelLoader::getAiMeshes()
+vector<aiMesh *> ModelLoader::getAiMeshes()
 {
     return aiMeshes;
 }
 
-Mesh* BeBopSensors_ModelLoader::getMesh(int index)
+Mesh* ModelLoader::getMesh(int index)
 {
     if(index < meshes.size())
     {
@@ -122,12 +120,27 @@ Mesh* BeBopSensors_ModelLoader::getMesh(int index)
     }
 }
 
-QVector<Mesh *> BeBopSensors_ModelLoader::getMeshes()
+QVector<Mesh *> ModelLoader::getMeshes()
 {
     return meshes;
 }
 
-QVector<Bone *> BeBopSensors_ModelLoader::getBones()
+QVector<Bone *> ModelLoader::getBones()
 {
     return bones;
+}
+
+//==========================================================================================
+//=========================================== BONE =========================================
+//==========================================================================================
+Bone::Bone(QObject *parent) :
+    QObject(parent)
+{
+}
+
+Bone::Bone(QVector<int> indicies, QVector<float> weights, QObject *parent) :
+    QObject(parent)
+{
+    m_Indicies = indicies;
+    m_Weights = weights;
 }

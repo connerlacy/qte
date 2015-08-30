@@ -19,7 +19,7 @@ SOURCES += \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Canvas.cpp \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Light.cpp \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Mesh.cpp \
-    #$$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ModelLoader.cpp
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ModelLoader.cpp
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader.cpp
 
 HEADERS  += \
@@ -27,12 +27,13 @@ HEADERS  += \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Canvas.h \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Light.h \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Mesh.h \
-    #$$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ModelLoader.h
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_ModelLoader.h
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader.h
 
 OTHER_FILES += \
     $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader_Desktop_Template.frag \
-    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader_Desktop_Template.vert
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader_Desktop_Template.vert \
+    $$EIO_SDK_QT_PATH/eio_qte_graphics/eio_qte_Shader_Desktop_Snippets.glsl
 
 
 #===================================== MIDI =================================#

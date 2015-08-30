@@ -11,12 +11,35 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "BeBopSensors_Mesh.h"
-#include "BeBopSensors_Bone.h"
+#include "eio_qte_Mesh.h"
 
 using namespace std;
 
-class BeBopSensors_ModelLoader : public QObject
+#ifndef BONE_H
+#define BONE_H
+
+#include <QObject>
+#include <QVector>
+
+class Bone : public QObject
+{
+    Q_OBJECT
+public:
+    explicit Bone(QObject *parent = 0);
+    Bone(QVector<int> indicies, QVector<float> weights, QObject *parent = 0);
+
+    QVector<int> m_Indicies;
+    QVector<float> m_Weights;
+
+signals:
+
+public slots:
+
+};
+
+#endif // BONE_H
+
+class ModelLoader : public QObject
 {
     Q_OBJECT
 
@@ -26,7 +49,7 @@ class BeBopSensors_ModelLoader : public QObject
     QVector<Bone *> bones;
 
 public:
-    explicit BeBopSensors_ModelLoader(QObject *parent = 0);
+    explicit ModelLoader(QObject *parent = 0);
 
     bool importAsset(QString pathToFile);
 
@@ -34,7 +57,6 @@ public:
     vector<aiMesh *> getAiMeshes();
     aiMesh* getAiMesh(int index);
 
-    //BeBop Format
     //---- Mesh
     QVector<Mesh *> getMeshes();
     Mesh *getMesh(int index);

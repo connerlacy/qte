@@ -56,17 +56,19 @@ void Mesh::makeSphere(float radius, float numLongitude, float numLatitude)
     _vertices.clear();
     _colors.clear();
 
-    float latitude = 1.0 / (numLatitude-1);
-    float longitude = 1.0 / (numLongitude-1);
+    //radius = 0.01;
+
+    float latitude = 1.0 / float(numLatitude-1);
+    float longitude = 1.0 / float(numLongitude-1);
 
     //---- Vertex / Normals
-    for(int lat = 0; lat < numLatitude; lat++)
+    for(float lat = 0; lat < numLatitude; lat++)
     {
-        for(int lon = 0; lon < numLongitude; lon++)
+        for(float lon = 0; lon < numLongitude; lon++)
         {
             float y = sin( -M_PI_2 + M_PI * lat * latitude );
-            float x = cos(2*M_PI * lon * longitude) * sin( M_PI * lat * latitude );
-            float z = sin(2*M_PI * lon * longitude) * sin( M_PI * lat * latitude );
+            float x = cos(2.0f*M_PI * lon * longitude) * sin( M_PI * lat * latitude );
+            float z = sin(2.0f*M_PI * lon * longitude) * sin( M_PI * lat * latitude );
 
             QVector3D point;
 
@@ -103,13 +105,20 @@ void Mesh::makeCircle(float radius, float numSlices)
     _colors.clear();
 
 
-    for(int i =0; i <= numSlices*2.0f; i++)
+    for(int i = 0; i < numSlices*2.0f; i++)
     {
         double angle = 2.0f * M_PI * (float)i / (numSlices*2.0f);
         double x = cos(angle)*radius;
         double y = sin(angle)*radius;
         newVertex(x,y,0);
         _normals.append(QVector3D(x,y,0));
+    }
+
+    _indices.clear();
+
+    for(int i = 0; i < _vertices.size(); i++)
+    {
+        _indices.append(i);
     }
 
     //initColors();
@@ -279,7 +288,7 @@ void Mesh::makeCylinder(float radius, float height, float numLongitude, float nu
             point.setY(y * radius);
             point.setZ(z * radius);
 
-            qDebug() << "x" << x << "z" << z;
+            //qDebug() << "x" << x << "z" << z;
 
             newVertex(point.x(), point.y(), point.z());
 

@@ -1,4 +1,5 @@
 # C++ objects and libs
+eio_qte_libs/
 
 *.slo
 *.lo
