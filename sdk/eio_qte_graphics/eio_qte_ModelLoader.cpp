@@ -81,7 +81,7 @@ bool ModelLoader::importAsset(QString pathToFile)
             //qDebug() << "HAS NORMALS" << currentMesh->HasNormals();
 
             //---- INDEX
-            QVector<int>   indicies;
+            QVector<GLushort>   indicies;
 
             //Iterate faecs
             for(int face = 0; face < currentMesh->mNumFaces; face++)
@@ -92,7 +92,7 @@ bool ModelLoader::importAsset(QString pathToFile)
                 }
             }
 
-            meshes.back()->setIndicies(indicies);
+            meshes.back()->setIndices(indicies);
             //qDebug() << "MESHES NUM INDICIES:" << indicies.size();
         }
     }

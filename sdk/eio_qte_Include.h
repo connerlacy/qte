@@ -14,6 +14,7 @@
 #include "eio_qte_graphics/eio_qte_Mesh.h"
 #include "eio_qte_graphics/eio_qte_Light.h"
 #include "eio_qte_graphics/eio_qte_Shader.h"
+#include "eio_qte_graphics/eio_qte_ModelLoader.h"
 
 //================================ MIDI
 #include "eio_qte_midi/eio_qte_AudioMIDIIO.h"

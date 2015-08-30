@@ -6,8 +6,15 @@ Mesh::Mesh() :
     _primitive(GL_FILL),
     m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
 {
+}
 
-    glClearColor(0, 0, 0, 1);
+Mesh::Mesh(QVector<QVector3D> vertices) :
+    _face(GL_FRONT_AND_BACK),
+    _mode(GL_LINE),
+    _primitive(GL_FILL),
+    m_IndexBuffer(QOpenGLBuffer::IndexBuffer)
+{
+    _vertices = vertices;
 }
 
 void Mesh::newVertex(float x, float y, float z)
@@ -774,4 +781,14 @@ void Mesh::clear()
     _vertices.clear();
     _normals.clear();
     _colors.clear();
+}
+
+void Mesh::setIndices(QVector<GLushort> indices)
+{
+    _indices = indices;
+}
+
+void Mesh::setNormals(QVector<QVector3D> normals)
+{
+    _normals = normals;
 }

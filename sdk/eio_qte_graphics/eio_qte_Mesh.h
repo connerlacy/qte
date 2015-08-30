@@ -19,6 +19,7 @@ class Mesh
 {
 public:
     Mesh();
+    Mesh(QVector<QVector3D> vertices);
 
     QMatrix4x4 _transformationMatrix;
 
@@ -27,7 +28,10 @@ public:
     QVector<QVector3D>  _vertices;  //Vector of vertices
     QVector<QVector4D>  _colors;     //Vecotr of colors
     QVector<GLushort>   _indices;   //Vecotr of indexes into vertex array
+    void setIndices(QVector<GLushort> indices);
+
     QVector<QVector3D>  _normals;
+    void setNormals(QVector<QVector3D> normals);
 
     //---------------------------------------- SHADERS
     QOpenGLShaderProgram m_shaderProgram;
