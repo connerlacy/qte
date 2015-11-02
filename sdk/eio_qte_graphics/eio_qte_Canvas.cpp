@@ -11,7 +11,7 @@ Canvas::Canvas(QWidget *parent) :
     m_Interval = 50;
     connect(m_drawTimer, SIGNAL(timeout()), this, SLOT(update()));
 
-    m_ClearColor = QVector4D(1,0,1,1);
+    m_ClearColor = QVector4D(0.2,0.2,0.2,1);
 }
 
 void Canvas::initializeGL()

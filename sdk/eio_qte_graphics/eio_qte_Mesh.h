@@ -51,6 +51,8 @@ public:
     void setPolygonMode(GLenum face, GLenum mode);
     void setPrimitive(GLenum primitive);
     void setMultMatrix(QMatrix4x4 mtrx);
+    void setColor(QVector4D col);
+    void setVertexColor(int index, QVector4D col);
 
     void initIndicies();    //Inits indices to 0 to vertex array size
 

@@ -47,6 +47,8 @@ void ArcBall::translate(int x, int y, int z)
     _translateY = y;
     _translateZ = z;
 
+    _xyz = QVector3D(x,y,z);
+
     updateMatrix();
 }
 

@@ -142,7 +142,3 @@ DEPENDPATH += $$EIO_SDK_QT_PATH/eio_qte_libs/Assimp/include
 
 HEADERS +=  \
     $$EIO_SDK_QT_PATH/eio_qte_Include.h
-
-
-
-

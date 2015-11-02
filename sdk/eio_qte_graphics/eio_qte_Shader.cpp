@@ -42,7 +42,7 @@ void Shader::setAttributeBuffersFromMesh(Mesh *mesh)
     //---- Color
     mesh->m_ColorBuffer.bind();
     enableAttributeArray("a_color");
-    setAttributeBuffer("a_color", GL_FLOAT, 0, 4);      //R, G, B, A
+    setAttributeBuffer("a_color", GL_FLOAT, 0, 4);      // R, G, B, A
 
     //---- Normal
     mesh->m_NormalBuffer.bind();

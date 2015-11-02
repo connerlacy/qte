@@ -50,6 +50,22 @@ void Mesh::setPrimitive(GLenum primitive)
     _primitive = primitive;
 }
 
+void Mesh::setColor(QVector4D col)
+{
+    for(int i = 0; i < _vertices.size(); i++)
+    {
+        _colors.append(col);
+    }
+}
+
+void Mesh::setVertexColor(int index, QVector4D col)
+{
+    if(index < _colors.size())
+    {
+        _colors[index] = col;
+    }
+}
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////// UTILITIES /  HELPERS ///////////////////////////////////////////
@@ -578,12 +594,11 @@ void Mesh::makePlane(int rows, int columns, float unitSize)
     //---- Verticies
     _vertices.clear();
 
-    for(int i = 0; i < rows; i++)
+    for(float i = 0; i < rows; i++)
     {
-        for(int j = 0; j < columns; j++)
+        for(float j = 0; j < columns; j++)
         {
-            _vertices.append(QVector3D(i*unitSize,j*unitSize,0));
-            //newVertex( i*unitSize, j*unitSize, 0);
+            _vertices.append(QVector3D(i*unitSize - unitSize*columns/2.0 + 0.5, j*unitSize - unitSize*rows/2.0 + 0.5, 0));
         }
     }
 
@@ -606,11 +621,7 @@ void Mesh::makePlane(int rows, int columns, float unitSize)
     {
         for(int j = 0; j < columns; j++)
         {
-            QMatrix4x4 mat;
-            mat.rotate(90, 0, 1, 0);
-
-            QVector3D normal = mat * QVector3D( i, j, 0);
-            normal.normalize();
+            QVector3D normal = QVector3D( 0, 0, 1);
             _normals.append(normal);
         }
     }
@@ -699,17 +710,26 @@ void Mesh::createBuffers()
     m_IndexBuffer.bind();
     m_IndexBuffer.allocate(_indices.constData(), _indices.size() * sizeof(GLushort));
 
+
+
     for(float i = 0 ; i < _vertices.size()/3; i++)
     {
-        QVector4D col = QVector4D(float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX), 1);
-        _colors.append(col);
-        _colors.append(col);
-        _colors.append(col);
+        //QVector4D col = QVector4D(float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX), 1);
+        //col = QVector4D(1.0, 1.0, 1.0, 1.0);
+        //_colors.append(col);
+        //_colors.append(col);
+        //_colors.append(col);
         //qDebug() << "i/float(_vertices.size())" << RAND_MAX;
     }
 
 
     //---- Color
+
+    if(_colors.size() < _vertices.size())
+    {
+        _colors = QVector<QVector4D>(_vertices.size());
+    }
+
     m_ColorBuffer.create();
     m_ColorBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_ColorBuffer.bind();
