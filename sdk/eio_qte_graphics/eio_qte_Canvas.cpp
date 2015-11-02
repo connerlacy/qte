@@ -22,7 +22,7 @@ void Canvas::initializeGL()
     setup();
 
     m_drawTimer->start(m_Interval);
-    m_ArcBall->translate(0,0,1);
+    m_ArcBall->translate(0,0,15);
 }
 
 void Canvas::resizeGL(int width, int height)
