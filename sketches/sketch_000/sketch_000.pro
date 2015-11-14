@@ -32,3 +32,5 @@ sketch_000_Shader.vert
 
 EIO_SDK_QT_PATH =/Users/connerlacy/Documents/emergent.io/Repositories/eio_qte/sdk
 include($$EIO_SDK_QT_PATH/eio_qte.pri)
+
+DISTFILES +=

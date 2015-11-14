@@ -401,50 +401,45 @@ void Mesh::makeCylinder(float radius, QVector3D start, QVector3D end, float numL
 //--------------------------------------- Plane -----------------------------------------//
 void Mesh::makePlane(int rows, int columns)
 {
+    setPrimitive(GL_TRIANGLES);
 
     //---- Verticies
     _vertices.clear();
 
-    for(int i = 0; i < rows; i++)
-    {
-        for(int j = 0; j < columns; j++)
-        {
-            newVertex( i, j, 0);
-        }
-    }
-
-    _vertices.clear();
-
     for(int x = 0; x < rows - 1; x++)
     {
+        float xPos = (float)x - (rows/2.0 - 1);
+
         //Even Row
         if ( (x & 1) == 0 )
         {
             for(int y = 0; y < columns - 1; y++)
             {
+                float yPos = (float)y - (columns/2.0 - 1);
+
                 if((y & 1) == 0)
                 {
                     //Triangle 1
-                    newVertex(x, y, 0);
-                    newVertex(x, y + 1, 0);
-                    newVertex(x + 1, y, 0);
+                    newVertex(xPos, yPos, 0);
+                    newVertex(xPos, yPos + 1, 0);
+                    newVertex(xPos + 1, yPos, 0);
 
                     //Triangle 2
-                    newVertex((x + 1), y,0);
-                    newVertex((x + 1), y + 1,0);
-                    newVertex(x, y + 1,0);
+                    newVertex((xPos + 1), yPos,0);
+                    newVertex((xPos + 1), yPos + 1,0);
+                    newVertex(xPos, yPos + 1,0);
                 }
                 else
                 {
                     //Triangle 1
-                    newVertex(x, y, 0);
-                    newVertex((x + 1), y, 0);
-                    newVertex((x + 1), y + 1, 0);
+                    newVertex(xPos, yPos, 0);
+                    newVertex((xPos + 1), yPos, 0);
+                    newVertex((xPos + 1), yPos + 1, 0);
 
                     //Triangle 2
-                    newVertex(x, y, 0);
-                    newVertex((x + 1), y + 1, 0);
-                    newVertex(x, y + 1, 0);
+                    newVertex(xPos, yPos, 0);
+                    newVertex((xPos + 1), yPos + 1, 0);
+                    newVertex(xPos, yPos + 1, 0);
                 }
             }
         }
@@ -454,29 +449,31 @@ void Mesh::makePlane(int rows, int columns)
         {
             for(int y = 0; y < columns - 1; y++)
             {
+                float yPos = (float)y - (columns/2.0 - 1);
+
                 if((y & 1) == 1)
                 {
                     //Triangle 1
-                    newVertex(x, y, 0);
-                    newVertex(x, y + 1, 0);
-                    newVertex((x + 1), y, 0);
+                    newVertex(xPos, yPos, 0);
+                    newVertex(xPos, yPos + 1, 0);
+                    newVertex((xPos + 1), yPos, 0);
 
                     //Triangle 2
-                    newVertex((x + 1), y, 0);
-                    newVertex((x + 1), y + 1, 0);
-                    newVertex(x, y + 1, 0);
+                    newVertex((xPos + 1), yPos, 0);
+                    newVertex((xPos + 1), yPos + 1, 0);
+                    newVertex(xPos, yPos + 1, 0);
                 }
                 else
                 {
                     //Triangle 1
-                    newVertex(x, y, 0);
-                    newVertex((x + 1), y, 0);
-                    newVertex((x + 1), y + 1, 0);
+                    newVertex(xPos, yPos, 0);
+                    newVertex((xPos + 1), yPos, 0);
+                    newVertex((xPos + 1), yPos + 1, 0);
 
                     //Triangle 2
-                    newVertex(x, y, 0);
-                    newVertex((x + 1), y + 1, 0);
-                    newVertex(x, y + 1, 0);
+                    newVertex(xPos, yPos, 0);
+                    newVertex((xPos + 1), yPos + 1, 0);
+                    newVertex(xPos, yPos + 1, 0);
 
                 }
             }
@@ -490,100 +487,12 @@ void Mesh::makePlane(int rows, int columns)
         _indices.append(i);
     }
 
-    /*
-    _indices.clear();
-
-    for(int x = 0; x < rows - 1; x++)
-    {
-        //Even Row
-        if ( (x & 1) == 0 )
-        {
-            for(int y = 0; y < columns - 1; y++)
-            {
-                if((y & 1) == 0)
-                {
-                    //Triangle 1
-                    _indices.append(x * columns + y);
-                    _indices.append(x * columns + y + 1);
-                    _indices.append((x + 1) * columns + y);
-
-                    //Triangle 2
-                    _indices.append((x + 1) * columns + y);
-                    _indices.append((x + 1) * columns + y + 1);
-                    _indices.append(x * columns + y + 1);
-                }
-                else
-                {
-                    //Triangle 1
-                    _indices.append(x * columns + y);
-                    _indices.append((x + 1) * columns + y);
-                    _indices.append((x + 1) * columns + y + 1);
-
-                    //Triangle 2
-                    _indices.append(x * columns + y);
-                    _indices.append((x + 1) * columns + y + 1);
-                    _indices.append(x * columns + y + 1);
-
-                }
-            }
-        }
-
-        //Odd Rows
-        else
-        {
-            for(int y = 0; y < columns - 1; y++)
-            {
-                if((y & 1) == 1)
-                {
-                    //Triangle 1
-                    _indices.append(x * columns + y);
-                    _indices.append(x * columns + y + 1);
-                    _indices.append((x + 1) * columns + y);
-
-                    //Triangle 2
-                    _indices.append((x + 1) * columns + y);
-                    _indices.append((x + 1) * columns + y + 1);
-                    _indices.append(x * columns + y + 1);
-                }
-                else
-                {
-                    //Triangle 1
-                    _indices.append(x * columns + y);
-                    _indices.append((x + 1) * columns + y);
-                    _indices.append((x + 1) * columns + y + 1);
-
-                    //Triangle 2
-                    _indices.append(x * columns + y);
-                    _indices.append((x + 1) * columns + y + 1);
-                    _indices.append(x * columns + y + 1);
-
-                }
-            }
-        }
-    }
-    */
-
-    //m_IndexBuffer.bind();
-    //m_IndexBuffer.allocate(_indices.constData(), _indices.size() * sizeof(GLushort));
-
-    /*
     //---- Normals
-
-    for(int i = 0; i < rows; i++)
+    for(int i = 0; i < _vertices.size(); i++)
     {
-        for(int j = 0; j < columns; j++)
-        {
-            QMatrix4x4 mat;
-            mat.rotate(90, 0, 1, 0);
-
-            QVector3D normal = mat * QVector3D( i, j, 0);
-            normal.normalize();
-            _normals.append(normal);
-        }
+        QVector3D normal = QVector3D( 0, 0, 1);
+        _normals.append(normal);
     }
-    */
-
-    //initCubeGeometry();
 
 }
 
@@ -704,27 +613,24 @@ void Mesh::createBuffers()
     m_NormalBuffer.bind();
     m_NormalBuffer.allocate(_normals.constData(), _normals.size() * sizeof(QVector3D));
 
-    //---- Indices
+    //---- Indices (Index Buffer)
     m_IndexBuffer.create();
     m_IndexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
     m_IndexBuffer.bind();
     m_IndexBuffer.allocate(_indices.constData(), _indices.size() * sizeof(GLushort));
 
-
-
-    for(float i = 0 ; i < _vertices.size()/3; i++)
+    //---- Indicies (Vertex Buffer) (only supports triangles currently)
+    for(int i = 0; i < _vertices.size(); i++)
     {
-        //QVector4D col = QVector4D(float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX),float(qrand())/float(RAND_MAX), 1);
-        //col = QVector4D(1.0, 1.0, 1.0, 1.0);
-        //_colors.append(col);
-        //_colors.append(col);
-        //_colors.append(col);
-        //qDebug() << "i/float(_vertices.size())" << RAND_MAX;
+        _indicesV.append(float(i));
     }
 
+    m_IndexVertexBuffer.create();
+    m_IndexVertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_IndexVertexBuffer.bind();
+    m_IndexVertexBuffer.allocate(_indicesV.constData(), _indicesV.size() * sizeof(GLfloat));
 
     //---- Color
-
     if(_colors.size() < _vertices.size())
     {
         _colors = QVector<QVector4D>(_vertices.size());

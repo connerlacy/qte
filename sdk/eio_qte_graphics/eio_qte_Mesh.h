@@ -28,6 +28,7 @@ public:
     QVector<QVector3D>  _vertices;  //Vector of vertices
     QVector<QVector4D>  _colors;     //Vecotr of colors
     QVector<GLushort>   _indices;   //Vecotr of indexes into vertex array
+    QVector<GLfloat>   _indicesV;
     void setIndices(QVector<GLushort> indices);
 
     QVector<QVector3D>  _normals;
@@ -43,6 +44,7 @@ public:
     QOpenGLBuffer m_NormalBuffer;
     QOpenGLBuffer m_TextureUVBuffer;
     QOpenGLBuffer m_IndexBuffer;
+    QOpenGLBuffer m_IndexVertexBuffer;
 
     void createBuffers();
 

@@ -53,5 +53,14 @@ void Shader::setAttributeBuffersFromMesh(Mesh *mesh)
     mesh->m_TextureUVBuffer.bind();
     enableAttributeArray("a_texcoord");
     setAttributeBuffer("a_texcoord", GL_FLOAT, 0, 2);   // X, Y
-}
 
+    //---- Indices (Index Buffer)
+    //mesh->m_IndexBuffer.bind();
+    //enableAttributeArray("a_index");
+    //setAttributeBuffer("a_index", GL_FLOAT, 0, 1);
+
+    //---- Indices (Vertex Buffer)
+    mesh->m_IndexVertexBuffer.bind();
+    enableAttributeArray("a_index");
+    setAttributeBuffer("a_index", GL_FLOAT, 0, 1);
+}

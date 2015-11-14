@@ -13,15 +13,18 @@
 
 int main(int argc, char *argv[])
 {
-QSurfaceFormat format;
-format.setDepthBufferSize( 24 );
-format.setSamples( 8 );
+    QSurfaceFormat format;
+    format.setDepthBufferSize(24);
+    format.setSamples(8);
 
-QSurfaceFormat::setDefaultFormat(format);
-	QApplication a(argc, argv);
-	MainWindow w;
-	w.show();
+    QSurfaceFormat::setDefaultFormat(format);
+    QApplication a(argc, argv);
 
-	return a.exec();
+    MainWindow w;
+    w.show();
+
+    qDebug() << "version" << format.version();
+
+    return a.exec();
 }
 

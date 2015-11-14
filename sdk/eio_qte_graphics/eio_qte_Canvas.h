@@ -29,7 +29,7 @@ public:
     QMatrix4x4 m_ProjectionMatrix;
 
     QTimer  *m_drawTimer;
-    int     m_Interval;
+    float     m_Interval;
 
     ArcBall *m_ArcBall;
 

@@ -12,7 +12,7 @@ public:
     void setup();
     void draw();
 
-    int m_Time = 0;
+    float m_Time = 0;
 
     Shader m_Shader;
     Mesh *m_Mesh;

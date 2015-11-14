@@ -1,4 +1,3 @@
-
 uniform mat4    u_mvp_matrix;
 uniform float   u_time;
 uniform vec3    u_cameraPosition;
@@ -6,7 +5,6 @@ uniform vec3    u_cameraPosition;
 varying vec4    v_position;
 varying vec4    v_color;
 varying vec4    v_normal;
-
 varying float   v_index;
 
 uniform struct Light
@@ -18,12 +16,15 @@ uniform struct Light
     float   attenuationCoefficient;
     float   materialShininess;
     vec3    materialSpecularColor;
+    //float   intensity;
 };
 
 vec3 light(Light l)
 {
     vec3 surfaceToLight = normalize(l.position - v_position.xyz);
     vec3 surfaceToCamera = normalize(u_cameraPosition - v_position.xyz);
+
+    //l.intensity = dot(surfaceToLight, v_normal);
 
     // Ambient
     vec3 ambient =  l.ambientCoefficient * l.color * v_color.rgb;
@@ -49,7 +50,7 @@ vec3 light(Light l)
 
 
     // Color
-    vec3 linearColor = ambient + attenuation*(diffuse + specular);
+    vec3 linearColor = ambient + attenuation*(diffuse);// + specular);
 
 
     // Gamma Correction
@@ -65,13 +66,16 @@ void main()
 
     Light l;
     l.color = vec3(1.0,1.0,1.0);
-    l.position = vec3(0, 0, 1.0);
-    l.ambientCoefficient = 0.1;
+    l.position = vec3(0, sin(u_time/1.0)*25.0, 20.0);
+    l.ambientCoefficient = 0.95;
     l.diffuseCoefficient = max(0.0, dot(v_normal.xyz, normalize(l.position - v_position.xyz)));
-    l.attenuationCoefficient = 0.0;
-    l.materialShininess = 100.0;
-    l.materialSpecularColor = vec3(0.0,0.0,0.0);
+    l.attenuationCoefficient = 0.001;
+    l.materialShininess = 10.05;
 
-    gl_FragColor = vec4(light(l), v_color.a);
+    l.materialSpecularColor = vec3(1.0,1.0,1.0);
+
+    gl_FragColor = vec4(light(l)*1.0, v_color.a);
+
+    //gl_FragColor = v_color;
 }
 
