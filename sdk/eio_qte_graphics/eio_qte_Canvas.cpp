@@ -18,11 +18,15 @@ void Canvas::initializeGL()
 {
     makeCurrent();
     initializeOpenGLFunctions();
+    glEnable(GL_MULTISAMPLE);
+    glEnable(GL_LINE_SMOOTH);
 
     setup();
 
     m_drawTimer->start(m_Interval);
     m_ArcBall->translate(0,0,15);
+
+
 }
 
 void Canvas::resizeGL(int width, int height)
