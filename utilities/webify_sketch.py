@@ -4,7 +4,7 @@ import os
 import shutil
 import datetime
 
-sketch = "001"
+sketch = "002"
 screenCapSrcDir = "/Users/connerlacy/Desktop/untitled folder"
 rootDir = "/Users/connerlacy/Documents/emergent.io/website/emergent.io/sketches/" + sketch
 
@@ -51,10 +51,11 @@ for file in os.listdir(screenCapSrcDir):
 ### ----------------------------------- HTML
 EIO_HTML_MACRO_SKETCH_NAME = "sketch_" + sketch
 EIO_HTML_MACRO_SKETCH_DATE = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-EIO_HTML_MACRO_SKETCH_VIMEO_URL = "https://player.vimeo.com/146741790"
-EIO_HTML_MACRO_SKETCH_SOURCE_TEXT = "github.com/emergent-io/eio_qte/releases/tag/v0.0.3"
-EIO_HTML_MACRO_SKETCH_SOURCE_URL = "https://github.com/emergent-io/eio_qte/releases/tag/v0.0.3"
-EIO_HTML_MACRO_SKETCH_DESCRIPTION = "Pond-hopped pebbles make / ripples return to their source / again and again."
+EIO_HTML_MACRO_SKETCH_VIMEO_URL = "https://player.vimeo.com/video/146741790"
+EIO_HTML_MACRO_SKETCH_SOURCE_TEXT = "github.com/emergent-io/eio_qte/releases/tag/v0.0.4"
+EIO_HTML_MACRO_SKETCH_SOURCE_URL = "https://github.com/emergent-io/eio_qte/releases/tag/v0.0.4"
+EIO_HTML_MACRO_SKETCH_DESCRIPTION = "More experiments with Perlin Noise, making use of libnoise. I kept things on the CPU (no shaders) and in 2D utilizing QPainter within the eio_qte canvas., and spent hours fiddling with the octaves and 3D noise inputs-- such a magical tool."
+EIO_HTML_MACRO_SKETCH_HAIKU = "How fine is the edge / between light and a shadow? / Infinite, I guess."
 
 indexTemplateFilePath = "/Users/connerlacy/Documents/emergent.io/website/templates/sketches/index_template.html"
 indexFilePath = os.path.join(rootDir, "index.html")
@@ -73,6 +74,7 @@ for line in templateFile:
 		line = line.replace("EIO_HTML_MACRO_SKETCH_VIMEO_URL", EIO_HTML_MACRO_SKETCH_VIMEO_URL)
 		line = line.replace("EIO_HTML_MACRO_SKETCH_SOURCE_TEXT", EIO_HTML_MACRO_SKETCH_SOURCE_TEXT)
 		line = line.replace("EIO_HTML_MACRO_SKETCH_SOURCE_URL", EIO_HTML_MACRO_SKETCH_SOURCE_URL)
+		line = line.replace("EIO_HTML_MACRO_SKETCH_HAIKU", EIO_HTML_MACRO_SKETCH_HAIKU)
 		line = line.replace("EIO_HTML_MACRO_SKETCH_DESCRIPTION", EIO_HTML_MACRO_SKETCH_DESCRIPTION)
 		indexFile.write(line)
 		
