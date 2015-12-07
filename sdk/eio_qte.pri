@@ -139,6 +139,12 @@ INCLUDEPATH += $$EIO_SDK_QT_PATH/eio_qte_libs/Assimp/include
 DEPENDPATH += $$EIO_SDK_QT_PATH/eio_qte_libs/Assimp/include
 }
 
+#---- libnoise
+macx{
+LIBS += -L$$EIO_SDK_QT_PATH/eio_qte_libs/libnoise/ -lnoise
+INCLUDEPATH += $$EIO_SDK_QT_PATH/eio_qte_libs/libnoise/include/noise
+DEPENDPATH += $$EIO_SDK_QT_PATH/eio_qte_libs/libnoise/include/noise
+}
 
 HEADERS +=  \
     $$EIO_SDK_QT_PATH/eio_qte_Include.h
