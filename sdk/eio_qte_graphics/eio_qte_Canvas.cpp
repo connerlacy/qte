@@ -11,7 +11,8 @@ Canvas::Canvas(QWidget *parent) :
     m_Interval = 50;
     connect(m_drawTimer, SIGNAL(timeout()), this, SLOT(update()));
 
-    m_ClearColor = QVector4D(0.2,0.2,0.2,1);
+    m_ClearColor = QVector4D(0.0,0.0,0.0,1.0);
+    this->setUpdateBehavior(QOpenGLWidget::PartialUpdate);
 }
 
 void Canvas::initializeGL()
@@ -52,8 +53,10 @@ void Canvas::paintGL()
     if(!TWOD)
     {
         glClearColor(m_ClearColor.x(),m_ClearColor.y(),m_ClearColor.z(),m_ClearColor.w());
-        glEnable(GL_DEPTH_TEST);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable (GL_BLEND);
+        glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //glEnable(GL_DEPTH_TEST);
+        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     //qDebug() << "draw";

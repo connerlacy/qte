@@ -197,6 +197,31 @@ void Mesh::makeCircle(float radius, float borderWidth, float numSlices)
 
 }
 
+//----------------------------------------- Line -------------------------------------------//
+void Mesh::makeLine(float length, int numSegments)
+{
+    _vertices.clear();
+    _colors.clear();
+    _normals.clear();
+
+    float inc = length / (float)numSegments;
+
+    qDebug() << "l" << length << numSegments << inc;
+
+    for( float i = 0; i <= length; i+= inc )
+    {
+        newVertex(i,0,0);
+        _normals.append(QVector3D(0,0,0));
+    }
+
+    _indices.clear();
+
+    for(int i = 0; i < numSegments; i++)
+    {
+        _indices.append(i);
+    }
+}
+
 
 //----------------------------------------- Arc -------------------------------------------//
 void Mesh::makeArc(float radius, float width, float degreeStart, float degreeStop, float numSlices)

@@ -59,6 +59,9 @@ public:
     void initIndicies();    //Inits indices to 0 to vertex array size
 
     //---- Utilities / Helpers
+    // Line
+    void makeLine(float length, int numSegments);
+
     //Plane
     void makePlane(int rows, int columns);
     void makePlane(int rows, int columns, float unitSize);
