@@ -3,6 +3,7 @@
 
 #include <QOpenGLFunctions>
 #include <QOpenGLWidget>
+#include <QOpenGLWindow>
 #include <QOpenGLShaderProgram>
 #include <QOpenGLBuffer>
 #include <QMatrix4x4>
@@ -11,6 +12,7 @@
 #include <QGLFormat>
 #include <QOpenGLFunctions_3_3_Core>
 #include <QOpenGLFunctions_4_1_Core>
+#include <QOpenGLFunctions_4_1_Compatibility>
 
 #include "gl.h"
 #include "glu.h"
@@ -18,6 +20,7 @@
 #include "eio_qte_ArcBall.h"
 
 class Canvas : public QOpenGLWidget, protected QOpenGLFunctions
+//class Canvas : public QOpenGLWindow, protected QOpenGLFunctions
 {
     Q_OBJECT
 public:

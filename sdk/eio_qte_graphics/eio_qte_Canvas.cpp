@@ -1,7 +1,8 @@
 #include "eio_qte_Canvas.h"
 
 Canvas::Canvas(QWidget *parent) :
-    QOpenGLWidget(parent)
+    //QOpenGLWindow(QOpenGLWindow::PartialUpdateBlit, 0)
+        QOpenGLWidget(parent)
 {
     installEventFilter(this);
 
@@ -11,13 +12,16 @@ Canvas::Canvas(QWidget *parent) :
     m_Interval = 50;
     connect(m_drawTimer, SIGNAL(timeout()), this, SLOT(update()));
 
-    m_ClearColor = QVector4D(0.0,0.0,0.0,1.0);
-    this->setUpdateBehavior(QOpenGLWidget::PartialUpdate);
+    m_ClearColor = QVector4D(0.2,0.2,0.2,1.0);
+
+    // Prevent automatic gl clearing
+    //this->setUpdateBehavior(QOpenGLWidget::PartialUpdate);
 }
 
 void Canvas::initializeGL()
 {
     makeCurrent();
+
     initializeOpenGLFunctions();
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_LINE_SMOOTH);
@@ -55,8 +59,27 @@ void Canvas::paintGL()
         glClearColor(m_ClearColor.x(),m_ClearColor.y(),m_ClearColor.z(),m_ClearColor.w());
         glEnable (GL_BLEND);
         glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        //glEnable(GL_DEPTH_TEST);
-        //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
+
+    GLint faces[6][4] = {  /* Vertex indices for the 6 faces of a cube. */
+      {0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4},
+      {4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3} };
+    GLfloat v[8][3];  /* Will be filled in with X,Y,Z vertexes. */
+    GLfloat n[6][3] = {  /* Normals for the 6 faces of a cube. */
+      {-1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {1.0, 0.0, 0.0},
+      {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}, {0.0, 0.0, -1.0} };
+
+    for (int i = 0; i < 6; i++)
+    {
+      glBegin(GL_QUADS);
+      glNormal3fv(&n[i][0]);
+      glVertex3fv(&v[faces[i][0]][0]);
+      glVertex3fv(&v[faces[i][1]][0]);
+      glVertex3fv(&v[faces[i][2]][0]);
+      glVertex3fv(&v[faces[i][3]][0]);
+      glEnd();
     }
 
     //qDebug() << "draw";
@@ -74,7 +97,7 @@ void Canvas::mouseMoveEvent(QMouseEvent *me)
 
 void Canvas::mousePressEvent(QMouseEvent *me)
 {
-    this->setFocus();
+    //this->setFocus();
     m_ArcBall->click(me->x(), me->y());
 }
 
@@ -133,7 +156,7 @@ bool Canvas::eventFilter(QObject *obj, QEvent *e)
     else if(e->type() == QEvent::MouseButtonPress)
     {
         QMouseEvent *me = static_cast<QMouseEvent *>(e);
-        this->setFocus();
+        //this->setFocus();
         m_ArcBall->click(me->x(), me->y());
     }
     else if(e->type() == QEvent::MouseButtonRelease)

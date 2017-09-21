@@ -51,14 +51,14 @@ for file in os.listdir(screenCapSrcDir):
 ### ----------------------------------- HTML
 EIO_HTML_MACRO_SKETCH_NAME = "sketch_" + sketch
 EIO_HTML_MACRO_SKETCH_DATE = "2016-12-03 11:50"
-EIO_HTML_MACRO_SKETCH_VIMEO_URL = "https://player.vimeo.com/video/146741790"
-EIO_HTML_MACRO_SKETCH_SOURCE_TEXT = "github.com/emergent-io/eio_qte/releases/tag/v0.0.4"
-EIO_HTML_MACRO_SKETCH_SOURCE_URL = "https://github.com/emergent-io/eio_qte/releases/tag/v0.0.4"
+EIO_HTML_MACRO_SKETCH_VIMEO_URL = "https://player.vimeo.com/video/150607875"
+EIO_HTML_MACRO_SKETCH_SOURCE_TEXT = "github.com/emergent-io/eio_qte/releases/tag/v0.0.5"
+EIO_HTML_MACRO_SKETCH_SOURCE_URL = "https://github.com/emergent-io/eio_qte/releases/tag/v0.0.5"
 EIO_HTML_MACRO_SKETCH_DESCRIPTION = "This sketch is inspired by the work of Anthony Mattox, largely from 2009. A bit late to the party, but the technique is really timeless (temporal) coherent noise animation.  All the transformations are made in the vertex shader, alpha blending is enabled and depth test is disabled. In these cases the low alpha values stands in for no depth testing in a really nice way."
 EIO_HTML_MACRO_SKETCH_HAIKU = "Breaths passing between / breaths: there is nothing, but / a coalescence."
 
-indexTemplateFilePath = "/Users/connerlacy/Documents/emergent.io/website/templates/sketches/index_template.html"
-indexFilePath = os.path.join(rootDir, "index.html")
+indexTemplateFilePath = "/Users/connerlacy/Documents/emergent.io/website/templates/sketches/sketch_template.html"
+indexFilePath = os.path.join(rootDir, "sketch_" + sketch +".html")
 
 templateFile = open(indexTemplateFilePath, 'r')
 indexFile = open(indexFilePath, 'w')

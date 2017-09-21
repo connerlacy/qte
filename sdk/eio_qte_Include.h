@@ -29,6 +29,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+//---- libnoise
+#include "noise.h"
+using namespace noise;
+
+
 #define EIO_QTE_MAX_LIGHTS 8
 
 

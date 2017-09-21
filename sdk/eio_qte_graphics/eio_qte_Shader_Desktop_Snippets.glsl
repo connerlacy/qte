@@ -107,3 +107,21 @@ float fbm(vec3 x) {
     }
     return v;
 }
+
+//=================== Matrix
+mat4 inverse(mat4 m)
+{
+    mat2 a = inverse(mat2(m));
+    mat2 b = mat2(m[2].xy,m[3].xy);
+    mat2 c = mat2(m[0].zw,m[1].zw);
+    mat2 d = mat2(m[2].zw,m[3].zw);
+
+    mat2 t = c*a;
+    mat2 h = inverse(d - t*b);
+    mat2 g = - h*t;
+    mat2 f = - a*b*h;
+    mat2 e = a - f*t;
+
+    return mat4( vec4(e[0],g[0]), vec4(e[1],g[1]),
+            vec4(f[0],h[0]), vec4(f[1],f[1]) );
+}

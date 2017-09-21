@@ -24,6 +24,15 @@ void Mesh::newVertex(float x, float y, float z)
     //initIndicies();
 }
 
+void Mesh::moveVertex(int index, float x, float y, float z)
+{
+    if(index < _vertices.size())
+    {
+        QVector3D v(x, y, z);
+        _vertices[index] += v;
+    }
+}
+
 void Mesh::initIndicies()
 {
     _indices.clear();
@@ -340,7 +349,7 @@ void Mesh::makeCylinder(float radius, float height, float numLongitude, float nu
 
             newVertex(point.x(), point.y(), point.z());
 
-            //_normals.append(QVector3D(x,y,z));
+            _normals.append(QVector3D(x,y,z));
         }
     }
 
@@ -628,7 +637,7 @@ void Mesh::createBuffers()
 {
     //---- Position
     m_PositionBuffer.create();
-    m_PositionBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_PositionBuffer.setUsagePattern(QOpenGLBuffer::DynamicDraw);
     m_PositionBuffer.bind();
     m_PositionBuffer.allocate(_vertices.constData(), _vertices.size() * sizeof(QVector3D));
 
@@ -651,7 +660,7 @@ void Mesh::createBuffers()
     }
 
     m_IndexVertexBuffer.create();
-    m_IndexVertexBuffer.setUsagePattern(QOpenGLBuffer::StaticDraw);
+    m_IndexVertexBuffer.setUsagePattern(QOpenGLBuffer::DynamicDraw);
     m_IndexVertexBuffer.bind();
     m_IndexVertexBuffer.allocate(_indicesV.constData(), _indicesV.size() * sizeof(GLfloat));
 

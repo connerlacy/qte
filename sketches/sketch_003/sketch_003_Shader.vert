@@ -1,6 +1,9 @@
 uniform mat4    u_mvp_matrix;
 uniform float   u_time;
 uniform vec3    u_cameraPosition;
+uniform float   u_iter;
+uniform float   u_layers;
+uniform float   u_obj;
 
 attribute vec4  a_position;
 attribute vec4  a_normal;
@@ -11,9 +14,8 @@ attribute float a_index;
 varying vec4    v_position;
 varying vec4    v_normal;
 varying vec4    v_color;
-varying float   v_noise;
 
-#define NUM_OCTAVES 3
+#define NUM_OCTAVES 2
 
 float rand(float n){return fract(sin(n) * 43758.5453123);}
 float rand(vec2 n) {
@@ -111,31 +113,11 @@ float fbm(vec3 x) {
     return v;
 }
 
-mat4 rotationMatrix(vec3 axis, float angle)
-{
-    axis = normalize(axis);
-    float s = sin(angle);
-    float c = cos(angle);
-    float oc = 1.0 - c;
-
-    return mat4(oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,  0.0,
-                oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,  0.0,
-                oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c,           0.0,
-                0.0,                                0.0,                                0.0,                                1.0);
-}
-
 void main(void)
 {
     v_position = a_position;
-    v_position.z -= 100.0;
-    v_position.x -= 100.0;
-
     v_normal = a_normal;
     v_color = a_color;
-    v_noise = fbm(vec2(v_position.x/70.0, u_time*5.5));
-    v_noise = v_noise + fbm(v_noise);
-    mat4 mat = rotationMatrix(vec3(fbm(u_time)*0.5, fbm(u_time)*0.2, fbm(u_time)*0.3), fbm(u_time)*2.0);
-    v_position.y += v_noise*150.0;
 
-    gl_Position = u_mvp_matrix * mat * v_position;
+    gl_Position = u_mvp_matrix * v_position;
 }

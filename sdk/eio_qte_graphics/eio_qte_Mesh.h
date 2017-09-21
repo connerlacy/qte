@@ -49,6 +49,7 @@ public:
     void createBuffers();
 
     void newVertex(float x, float y, float z);
+    void moveVertex(int index, float x, float y, float z);
 
     void setPolygonMode(GLenum face, GLenum mode);
     void setPrimitive(GLenum primitive);
